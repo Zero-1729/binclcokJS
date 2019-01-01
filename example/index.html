@@ -1,0 +1,99 @@
+<html>
+	<meta name="viewport" content="width=device-width">
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="./main.css">
+
+	<head>
+		<title>Binclock JS</title>
+	</head>
+
+	<body>
+		<div id="app">
+			<h3>Binclock JS</h3>
+
+			<div class="btn-group-container">
+				<p>Clock Format</p>
+				<div class="btn-group">
+					<button class="left-btn" :class="{on: clockType == '24'}" @click="clockType='24'">24</button>
+					<button class="right-btn" :class="{on: clockType == '12'}" @click="clockType='12'">12</button>
+				</div>
+			</div>
+
+			<div class="clock">
+				<!-- Hours -->
+				<div class="balls-container" :class="{'balls-container-quarter': clockType == '12', 'balls-container-third': clockType == '24'}">
+					<div class="balls-left">
+						<div class="ball" v-for="hlball in clock.hrs.left" :class="{on: hlball == '1'}"></div>
+					</div>
+					<div class="balls-right">
+						<div class="ball" v-for="hrball in clock.hrs.right" :class="{on: hrball == '1'}"></div>
+					</div>
+				</div>
+				<!-- Minutes -->
+				<div class="balls-container" :class="{'balls-container-quarter': clockType == '12', 'balls-container-third': clockType == '24'}">
+					<div class="balls-left">
+						<div class="ball" v-for="mlball in clock.mins.left" :class="{on: mlball == '1'}"></div>
+					</div>
+					<div class="balls-right">
+						<div class="ball" v-for="mrball in clock.mins.right" :class="{on: mrball == '1'}"></div>
+					</div>
+				</div>
+				<!-- Seconds -->
+				<div class="balls-container" :class="{'no-border': clockType == '24', 'balls-container-quarter': clockType == '12', 'balls-container-third': clockType == '24'}">
+					<div class="balls-left">
+						<div class="ball" v-for="slball in clock.secs.left" :class="{on: slball == '1'}"></div>
+					</div>
+					<div class="balls-right">
+						<div class="ball" v-for="srball in clock.secs.right" :class="{on: srball == '1'}"></div>
+					</div>
+				</div>
+				<!-- Carry (AM/PM) -->
+				<div class="balls-container no-border" v-if="clockType == '12'" :class="{'balls-container-quarter': clockType == '12', 'balls-container-third': clockType == '24'}">
+					<div class="balls-right">
+						<div class="ball" v-for="cball in clock.carry" :class="{on: cball == '1'}" ></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="footer">
+				<h5>Engineered and Hand Crafted with </h5>
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 110 100" width="20" height="20"><path d=" M 30 80 L 30 70 L 20 70 L 20 60 L 10 60 L 10 50 L 0 50 L 0 40 L 0 20 L 10 20 L 10 10 L 20 10 L 20 0 L 30 0 L 40 0 L 40 10 L 50 10 L 50 20 L 60 20 L 60 10 L 70 10 L 70 0 L 90 0 L 90 10 L 100 10 L 100 20 L 110 20 L 110 50 L 100 50 L 100 60 L 90 60 L 90 70 L 80 70 L 80 80 L 70 80 L 70 90 L 60 90 L 60 100 L 50 100 L 50 90 L 40 90 L 40 80 L 30 80 Z " fill="rgb(72,185,255)"/></svg>
+				<h5> by Zero-1729</h5>
+			</div>
+		</div>
+
+		<script src="./lib/vue.js"></script>
+		<script src="./lib/binclock.js"></script>
+		<script>
+			new Vue({
+				el: '#app',
+				data() {
+					return {
+						clockType: '24',
+						clock: {
+					        'hrs': { 'left': null, 'right': null },
+					        'mins': { 'left': null,'right': null },
+					        'secs': { 'left': null, 'right': null },
+							'carry': null
+						}
+					}
+				},
+				watch: {
+					clockType: function (curr, prev) {
+						// We need to update the clock here instead of waiting for the next 'tick' call
+						this.tick()
+					}
+				},
+				mounted() {
+					this.tick()
+					setInterval(this.tick, 1000)
+				},
+				methods: {
+					tick() {
+						this.clock = window.binclockjs.buildClock(this.clockType)
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

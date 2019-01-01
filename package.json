@@ -1,0 +1,12 @@
+{
+  "name": "binclockjs",
+  "version": "1.0.0",
+  "description": "A lightweight JS module to manipulate time in binary format",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib",
+    "dist": "dist"
+  },
+  "author": "Zero-1729",
+  "license": "MIT"
+}
